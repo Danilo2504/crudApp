@@ -12,7 +12,7 @@ class AlbumsController extends Controller
      */
     public function index()
     {
-        return Album::all();
+        return view('albums.albums')->with('albums', Album::all());
     }
 
     /**
