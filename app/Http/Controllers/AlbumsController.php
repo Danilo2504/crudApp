@@ -44,7 +44,7 @@ class AlbumsController extends Controller
      */
     public function edit(Album $album)
     {
-        //
+        return view('albums.edit_album')->with('album', $album);
     }
 
     /**
@@ -60,6 +60,8 @@ class AlbumsController extends Controller
      */
     public function destroy(Album $album)
     {
-        //
+        $res = $album->delete();
+        $message = $res ? 'Album deleted successfully.' : 'Album could not be deleted.';
+        return redirect()->route('albums.index')->with('success', $message);
     }
 }
