@@ -3,62 +3,114 @@
 @section('content')
 <section class="bg-white dark:bg-gray-900">
   <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+    <x-breadcrumb :pages="[
+    ['label' => 'Edit Album', 'url' => route('albums.edit', $album)],
+    ]" />
     <h2 class="mb-4 text-2xl text-slate-200 font-bold">Edit Album</h2>
-    <form action="#">
+    <form method="POST" action="{{ route('albums.update', $album) }}">
+      @csrf
+      @method('PATCH')
       <div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
         <div class="sm:col-span-2">
-          <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Album Name</label>
+          <label for="album_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Album
+            name</label>
           <input type="text" name="name" id="name"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-            value="Apple iMac 27&ldquo;" placeholder="Type product name" required="">
+            value="{{$album->name}}" placeholder="Type album name" required="true">
         </div>
         <div>
           <label for="image-height" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Height
             (px)</label>
-          <input type="number" name="image-height" id="image-height"
+          <input type="number" name="cover_height" id="image-height"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-            value="15" placeholder="Ex. 12" required="">
+            value="{{$album->height}}" placeholder="Ex. 12" required="false">
         </div>
         <div>
           <label for="image-width" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Width
             (px)</label>
-          <input type="number" name="image-width" id="image-width"
+          <input type="number" name="cover_width" id="image-width"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-            value="15" placeholder="Ex. 12" required="">
+            value="{{$album->width}}" placeholder="Ex. 12" required="false">
         </div>
         <div class="sm:col-span-2">
           <label for="description"
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-          <textarea id="description" rows="8"
+          <textarea id="album_description" rows="8" name="description"
             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-            placeholder="Write a product description here...">Standard glass, 3.8GHz 8-core 10th-generation Intel Core i7 processor, Turbo Boost up to 5.0GHz, 16GB 2666MHz DDR4 memory, Radeon Pro 5500 XT with 8GB of GDDR6 memory, 256GB SSD storage, Gigabit Ethernet, Magic Mouse 2, Magic Keyboard - US</textarea>
+            placeholder="Write a product description here...">{{$album->description}}</textarea>
         </div>
         <div class="sm:col-span-2">
           <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="image_url">Upload
             file</label>
           <input
             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-            id="image_url" type="file">
-          <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="image_url_help">Accepted file types: JPG, PNG
+            id="image_url" name="image_url" type="file" accept="image/png, image/jpeg, image/jpg">
+          <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="image_url_help">Accepted file types: JPG, JPEG,
+            PNG
+          </div>
+        </div>
+        <div class="sm:col-span-2 {{ $album->image_url ? '' : 'hidden' }}" id="image-prev-container"
+          data-existing-image="{{ $image ?? '' }}">
+          <div class="grid grid-cols-3 gap-4 mb-4">
+            <div class="p-2 rounded-lg relative bg-gray-50 dark:bg-gray-700">
+              <img id="image-preview" src="{{$album->image_url ?? ''}}" alt="{{$album->name ?? ''}}"
+                class="max-w-full object-cover block align-middle">
+              <button type="button" id="remove-image" role="button"
+                class="absolute left-1 bottom-1 text-red-500 hover:text-red-400">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd"
+                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                    clip-rule="evenodd"></path>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
       <div class="flex items-center space-x-4">
         <button type="submit"
-          class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-          Update product
-        </button>
-        <button type="button"
-          class="text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Save
+          Changes</button>
+        <a href="{{ route('albums.index') }}"
+          class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900 inline-flex items-center">
           <svg class="w-5 h-5 mr-1 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd"
               d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
               clip-rule="evenodd"></path>
           </svg>
-          Delete
-        </button>
+          Discard Changes
+        </a>
       </div>
     </form>
   </div>
 </section>
+@endsection
+
+@section('scripts')
+<script text="text/javascript">
+  $(document).ready(function () {
+        const $imageInput = $('#image_url');
+        const $imagePreview = $('#image-preview');
+        const $imagePrevContainer = $('#image-prev-container');
+        const $removeButton = $('#remove-image');
+
+        $imageInput.change(function(){
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              $imagePreview.attr('src', e.target.result);
+              $imagePrevContainer.removeClass('hidden');
+            }
+            reader.readAsDataURL(file);
+          }
+        })
+
+        $removeButton.click(function(){
+          $imageInput.val('');
+          $imagePrevContainer.addClass('hidden');
+          $imagePreview.attr('src', '');
+        })
+    });
+</script>
 @endsection

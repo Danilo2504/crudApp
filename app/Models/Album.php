@@ -49,5 +49,6 @@ class Album extends Model
 
     protected $casts = [
         'created_at' => 'date:d-m-Y',
+        'updated_at' => 'date:d-m-Y',
     ];
 }

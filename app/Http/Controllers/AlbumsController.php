@@ -12,7 +12,8 @@ class AlbumsController extends Controller
      */
     public function index()
     {
-        return view('albums.albums')->with('albums', Album::all());
+        $albums = Album::orderBy('albums.updated_at', 'desc')->get();
+        return view('albums.list_albums')->with('albums', $albums);
     }
 
     /**
@@ -52,7 +53,13 @@ class AlbumsController extends Controller
      */
     public function update(Request $request, Album $album)
     {
-        //
+        // @TODO: Add validation
+        $data = $request->only(['name', 'description', 'height', 'width']);
+
+        $res = $album->update($data);
+        $message_type = $res ? 'success' : 'error';
+        $message = $message_type == 'success' ? 'Album updated successfully.' : 'Album could not be updated.';
+        return redirect()->route('albums.index')->with('message_type', $message_type)->with('message', $message);
     }
 
     /**
@@ -61,7 +68,8 @@ class AlbumsController extends Controller
     public function destroy(Album $album)
     {
         $res = $album->delete();
-        $message = $res ? 'Album deleted successfully.' : 'Album could not be deleted.';
-        return redirect()->route('albums.index')->with('success', $message);
+        $message_type = $res ? 'success' : 'error';
+        $message = $message_type == 'success' ? 'Album deleted successfully.' : 'Album could not be deleted.';
+        return redirect()->route('albums.index')->with('message_type', $message_type)->with('message', $message);
     }
 }
