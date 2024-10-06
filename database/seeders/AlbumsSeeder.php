@@ -12,6 +12,6 @@ class AlbumsSeeder extends Seeder
      */
     public function run(): void
     {
-        Album::factory(10)->create();
+        Album::factory(100)->create();
     }
 }

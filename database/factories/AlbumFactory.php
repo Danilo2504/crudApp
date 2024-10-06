@@ -17,11 +17,9 @@ class AlbumFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->sentence(4),
-            'description' => $this->faker->paragraph(3),
-            'image_url' => $this->faker->imageUrl(),
-            'height' => $this->faker->numberBetween(100, 200),
-            'width' => $this->faker->numberBetween(100, 200),
+            'album_name' => $this->faker->sentence(4),
+            'album_description' => $this->faker->paragraph(3),
+            'image_thumb_url' => $this->faker->imageUrl(),
         ];
     }
 }

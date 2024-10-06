@@ -12,7 +12,7 @@ class AlbumsController extends Controller
      */
     public function index()
     {
-        $albums = Album::orderBy('albums.updated_at', 'desc')->get();
+        $albums = Album::orderBy('albums.updated_at', 'desc')->paginate(15);
         return view('albums.list_albums')->with('albums', $albums);
     }
 
@@ -21,7 +21,7 @@ class AlbumsController extends Controller
      */
     public function create()
     {
-        //
+        return view('albums.create_album');
     }
 
     /**
@@ -29,7 +29,14 @@ class AlbumsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->only(['album_name', 'album_description']);
+        $album = new Album($data);
+        $album->image_thumb_url = '/';
+        $res = $album->save();
+
+        $message_type = $res ? 'success' : 'error';
+        $message = $message_type == 'success' ? 'Album updated successfully.' : 'Album could not be updated.';
+        return redirect()->route('albums.index')->with('message_type', $message_type)->with('message', $message);
     }
 
     /**
@@ -54,7 +61,7 @@ class AlbumsController extends Controller
     public function update(Request $request, Album $album)
     {
         // @TODO: Add validation
-        $data = $request->only(['name', 'description', 'height', 'width']);
+        $data = $request->only(['album_name', 'album_description']);
 
         $res = $album->update($data);
         $message_type = $res ? 'success' : 'error';

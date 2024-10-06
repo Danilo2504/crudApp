@@ -10,26 +10,28 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * 
  *
  * @property int $id
- * @property string $name
- * @property string|null $description
- * @property string $image_url
- * @property int|null $height
- * @property int|null $width
- * @property string|null $deleted_at
+ * @property string $album_name
+ * @property string|null $album_description
+ * @property string $image_thumb_url
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Database\Factories\AlbumFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Album newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Album newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Album onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Album query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Album whereAlbumDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Album whereAlbumName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Album whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Album whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Album whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Album whereHeight($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Album whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Album whereImageUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Album whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Album whereImageThumbUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Album whereThumbHeight($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Album whereThumbWidth($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Album whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Album whereWidth($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Album withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Album withoutTrashed()
  * @mixin \Eloquent
  */
 class Album extends Model
@@ -40,11 +42,11 @@ class Album extends Model
     protected $table = 'albums';
 
     protected $fillable = [
-        'name',
-        'description',
-        'image_url',
-        'height',
-        'width'
+        'album_name',
+        'album_description',
+        'image_thumb_url',
+        'thumb_height',
+        'thumb_width'
     ];
 
     protected $casts = [
